@@ -577,3 +577,39 @@ bool UARTWifi::send(byte id, char *str)
 
     return true;
 }
+
+/**
+ * @brief Get the Station Conf object
+ *
+ * @param config
+ * @return true if the request was successful.
+ * @return false if the request was not successful.
+ */
+bool UARTWifi::getStationConf(STATION_CONF *config)
+{
+    _flushUARTCellRead();
+
+    Serial.println("AT+CIPSTA?");
+    _uartCell.flush();
+
+    unsigned long start = millis();
+    while (millis() - start < READ_TIMEOUT)
+    {
+        String line = Serial.readStringUntil('\n');
+        line.trim();
+
+        if (line.equals(OK_STR))
+        {
+            LogInfo("Completed");
+            return true;
+        }
+
+        if (line.startsWith("+CIPSTA:"))
+        {
+            sscanf(line.c_str(), "+CIPSTA%[^,],%[^,],%[^,]", &config->ip, &config->netmask, &config->gateway);
+            continue;
+        }
+    }
+
+    return false;
+}

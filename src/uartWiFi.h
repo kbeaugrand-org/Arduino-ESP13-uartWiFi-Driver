@@ -100,6 +100,17 @@ typedef struct TCP_CHANNEL
 } TCP_CHANNEL;
 
 /**
+ * @brief Structure for the IP connection.
+ * 
+ */
+typedef struct STATION_CONF
+{
+    char ip[32];
+    char netmask[32];
+    char gateway[32];
+} STATION_CONF;
+
+/**
  * @brief Class representing the WiFi module.
  * It uses the Arduino Serial class to communicate with the module.
  * Protocol is based on the AT command set provided by ESP8266 - WROOM-02 - AT Firmware for WIFI and MQTT firmware.
@@ -191,6 +202,15 @@ public:
     bool getSoftAP(SOFT_ACCESS_POINT_CONF *config);
 
     // ====================== TCP/IP ======================
+
+    /**
+     * @brief Get the Station Conf object
+     * 
+     * @param config 
+     * @return true if the request was successful.
+     * @return false if the request was not successful.
+     */
+    bool getStationConf(STATION_CONF *config);
 
     /**
      * @brief Creates a TCP server.
